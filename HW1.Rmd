@@ -1,0 +1,131 @@
+---
+output: html_document
+---
+
+Bennett Widyolar  
+ES 207 - Environmental Data Analysis  
+2/4/2016  
+
+<center>
+# Homework 1
+</center>
+
+**Objective Statement**
+The objective of this homework assignment is to dive head-first into R and RMarkdown. To do so, I will be performing some analytical computations on an imported data set of tree heights and crown radii and report descriptive statistics of the data set and determine whether the two variables are correlated.
+
+**Methods:** I will be performing basic analytics on each data set (tree height, crown radius), including min, max, median, mean, standard deviation, and coefficient of variance. I will also plot the two variables against eachother and determine the correlation coefficient, r.  
+
+**Data:** The data comes as a comma separated value file - "Trees.csv". It was downloaded for this class from the Canvas Catcourses website.
+
+**Code:** The code for this assignment is as follows:
+
+```{r eval=FALSE}
+rm(list=ls())
+
+filename <- "trees.csv"
+print(c("Reading file: ",filename))
+Trees <- read.csv(filename,header = TRUE,sep=",")
+
+print(c("Dimensions of data file ",dim(Trees)))
+print("Structure of data file")
+str(Trees)
+
+TreeHeight <-Trees[,4]
+CrownRadii <- Trees[,5]
+
+height.summary <- c(min(TreeHeight),max(TreeHeight),mean(TreeHeight),median(TreeHeight))
+print("Height Summary: min, max, mean, median")
+str(height.summary);
+hist(TreeHeight)
+
+radius.summary <- c(min(CrownRadii),max(CrownRadii),mean(CrownRadii),median(CrownRadii))
+print("Crown Radius Summary: min, max, mean, median")
+str(radius.summary);
+hist(CrownRadii)
+
+print("Log-Histograms")
+
+hist(log(TreeHeight))
+hist(log(CrownRadii))
+
+print("Scatter Plot with BoxPlots")
+
+par(fig=c(0,0.8,0,0.8))
+plot(TreeHeight,CrownRadii,xlab="Tree Height [m]",ylab="Crown Radius [m]")
+par(fig=c(0,0.8,0.55,1),new=TRUE)
+boxplot(TreeHeight,horizontal=TRUE, xaxt='n', frame.plot=F)
+par(fig=c(0.65,1,0,0.8),new=TRUE)
+boxplot(CrownRadii, yaxt='n', frame.plot=F)
+
+print(cor.test(TreeHeight,CrownRadii))
+
+EDA = function(x) {
+  return( c(min(x),mean(x),median(x),max(x),range(x),sd(x),100*sd(x)/mean(x)) )
+}
+
+print("Function call to EDA (summary function) returns:")
+print("min / mean / median / max / bottom range / top range / standard deviation / Coefficient of Variation")
+print(EDA(TreeHeight))
+```
+
+**Results**
+Running the code produces the following results:
+```{r, echo=FALSE}
+rm(list=ls())
+
+filename <- "trees.csv"
+print(c("Reading file: ",filename))
+Trees <- read.csv(filename,header = TRUE,sep=",")
+
+print(c("Dimensions of data file ",dim(Trees)))
+print("Structure of data file")
+str(Trees)
+
+TreeHeight <-Trees[,4]
+CrownRadii <- Trees[,5]
+
+height.summary <- c(min(TreeHeight),max(TreeHeight),mean(TreeHeight),median(TreeHeight))
+print("Height Summary: min, max, mean, median")
+str(height.summary);
+hist(TreeHeight)
+
+radius.summary <- c(min(CrownRadii),max(CrownRadii),mean(CrownRadii),median(CrownRadii))
+print("Crown Radius Summary: min, max, mean, median")
+str(radius.summary);
+hist(CrownRadii)
+
+print("Log-Histograms")
+
+hist(log(TreeHeight))
+hist(log(CrownRadii))
+
+print("Scatter Plot with BoxPlots")
+
+par(fig=c(0,0.8,0,0.8))
+plot(TreeHeight,CrownRadii,xlab="Tree Height [m]",ylab="Crown Radius [m]")
+par(fig=c(0,0.8,0.55,1),new=TRUE)
+boxplot(TreeHeight,horizontal=TRUE, xaxt='n', frame.plot=F)
+par(fig=c(0.65,1,0,0.8),new=TRUE)
+boxplot(CrownRadii, yaxt='n', frame.plot=F)
+
+print(cor.test(TreeHeight,CrownRadii))
+
+EDA = function(x) {
+  return( c(min(x),mean(x),median(x),max(x),range(x),sd(x),100*sd(x)/mean(x)) )
+}
+
+print("Function call to EDA (summary function) returns:")
+print("min / mean / median / max / bottom range / top range / standard deviation / Coefficient of Variation")
+print(EDA(TreeHeight))
+```
+
+**Discussion**
+The two variables are positively correlated - i.e. as tree height increases, so does the crown radius. This is determined by simply looking at the scatter plot as well as the correlation test function cor.test, which calculates a 0.6639 r-value for the data sets.
+
+Thus, the null hypothesis that there is zero correlation between the two variables is wrong.
+
+The log-histogram distributions are much closer to normal distributions than the regular histograms of the tree height and crown radius.
+
+**Limitations**
+
+We don't know where or when this data was collected. From the scatter plot there seem to be minimum tree height and crown radius cutoffs (i.e no saplings or trees < 2 m seem to be reported). Thus the data itself isn't actually useful, but it was sure useful as a dataset to process for the sake of learning R and RMarkdown.
